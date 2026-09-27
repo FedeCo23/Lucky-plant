@@ -247,6 +247,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
 
                             <h3><?= htmlspecialchars($recensione['titolo'], ENT_QUOTES, 'UTF-8') ?></h3>
 
+                            <p><?= htmlspecialchars($recensione['contenuto'], ENT_QUOTES, 'UTF-8') ?></p>
                             <p>
                                 Scritto da <?= htmlspecialchars($recensione['nome'], ENT_QUOTES, 'UTF-8') ?>
                                 il <?= $recensione['data'] ?>
