@@ -228,7 +228,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <!-- HEADER-->
         <header>
             <div class="logo-wrapper">
-                <img src="../img/Asset 1@3x.png" alt="Logo Lucky Plant" class="logo">
+                <img src="../img/Logo1.png" alt="Logo Lucky Plant" class="logo">
                 <h1>Lucky Plant</h1>
             </div>
         </header>
@@ -332,7 +332,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <footer>
             <div class="footer-top">
                 <div class="footer-logo">
-                    <img src="../img/Asset 2@3x.png" alt="Logo Lucky Plant">
+                    <img src="../img/Logo2.png" alt="Logo Lucky Plant">
                 </div>
                 <ul>
                     <li><a href="chi-siamo.php">Chi siamo</a></li>
