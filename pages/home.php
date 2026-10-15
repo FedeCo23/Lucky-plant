@@ -14,7 +14,7 @@
         <!-- HEADER-->
         <header>
             <div class="logo-wrapper">
-                <img src="../img/Asset 1@3x.png" alt="Logo Lucky Plant" class="logo">
+                <img src="../img/Logo1.png" alt="Logo Lucky Plant" class="logo">
                 <h1>Lucky Plant</h1>
             </div>
         </header>
@@ -45,19 +45,19 @@
         <!--TRE CARD-->
         <section class="cards">
             <div class="card">
-                <img src="../img/Asset 2@3x.png" alt="logo">
+                <img src="../img/Logo2.png" alt="logo">
                 <h3>Chi siamo</h3>
                 <p>Un'azienda a conduzione familiare che unisce progettazione di giardini e cura del paesaggio.</p>
                 <a href="chi-siamo.php">Scopri di più</a>
             </div>
             <div class="card">
-                <img src="../img/Asset 2@3x.png" alt="logo">
+                <img src="../img/Logo2.png" alt="logo">
                 <h3>Il nostro vivaio</h3>
                 <p>Piante da interno, da esterno, grasse, bulbi e semi selezionati per il tuo giardino.</p>
                 <span class="fake_link">Scopri il nostro vivaio</span>
             </div>
             <div class="card">
-                <img src="../img/Asset 2@3x.png" alt="logo">
+                <img src="../img/Logo2.png" alt="logo">
                 <h3>Recensioni</h3>
                 <p>Vieni a scoprire cosa pensano di noi o lascia una recensione</p> <!--Sistemare-->
                 <a href="recensioni.php">Leggi le recensioni</a> <!--Sistemare-->
@@ -99,7 +99,7 @@
         <footer>
             <div class="footer-top">
                 <div class="footer-logo">
-                    <img src="../img/Asset 2@3x.png" alt="Logo Lucky Plant">
+                    <img src="../img/Logo2.png" alt="Logo Lucky Plant">
                 </div>
                 <ul>
                     <li><a href="chi-siamo.php">Chi siamo</a></li>
@@ -113,7 +113,7 @@
                 </div>
             </div>
             <hr>
-            <p class="copyright">Copyright Lucky Plants</p>
+            <p class="copyright">Copyright Lucky Plant</p>
         </footer>
 
     </div>

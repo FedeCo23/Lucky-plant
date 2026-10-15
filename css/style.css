@@ -124,7 +124,7 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 5px, 30px;
+    margin: 5px 30px;
 }
 
 .temi button {
@@ -185,7 +185,7 @@ nav {
     border-radius: 12px;
     background-image:
         linear-gradient(rgba(30, 30, 30, 0.55), rgba(30, 30, 30, 0.55)),
-        url("../img/Asset 2@3x.png");
+        url("../img/Logo2.png");
     background-size: cover;
     background-position: center;
     color: var(--colore-testo-chiaro);
@@ -221,7 +221,7 @@ nav {
 .card img {
     width: 100%;
     height: 160px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 8px;
 }
 
@@ -363,6 +363,13 @@ main section {
 .form_recommendation button:hover {
     background-color: var(--colore-decorazioni);
 }
+
+/* HONEYPOT antispam: nascosto agli utenti */
+.hp {
+    position: absolute;
+    left: -9999px;
+}
+
 
 /* MESSAGGI FORM */
 .errori,

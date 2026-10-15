@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //se si utilizza il metodo post (e 
 
 //----------------------------------PRENDIAMO LE RECENSIONI DAL DB E LE INSERIAMO NELLA PAGINA
 
-$sql = "SELECT id, nome, email, titolo, contenuto, DATE_FORMAT(create_at, '%d/%m/%Y') AS data_corretta FROM recensioni ORDER BY create_at DESC"; //prende le colonne dalla tabella recensione usando la data di creazione, dalla più recente alla più vecchia
+$sql = "SELECT id, nome, email, titolo, contenuto, DATE_FORMAT(created_at, '%d/%m/%Y') AS data_corretta FROM recensioni ORDER BY created_at DESC"; //prende le colonne dalla tabella recensione usando la data di creazione, dalla più recente alla più vecchia
 //il formato della data corretto viene salvato in data_corretta
 
 
@@ -167,7 +167,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Plant</title>
-    <link rel="stylesheet" href="../css/style.css?v=3">
+    <link rel="stylesheet" href="../css/style.css?v=4">
 
 </head>
 
@@ -177,7 +177,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <!-- HEADER-->
         <header>
             <div class="logo-wrapper">
-                <img src="../img/Asset 1@3x.png" alt="Logo Lucky Plant" class="logo">
+                <img src="../img/Logo1.png" alt="Logo Lucky Plant" class="logo">
                 <h1>Lucky Plant</h1>
             </div>
         </header>
@@ -273,7 +273,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <footer>
             <div class="footer-top">
                 <div class="footer-logo">
-                    <img src="../img/Asset 2@3x.png" alt="Logo Lucky Plant">
+                    <img src="../img/Logo2.png" alt="Logo Lucky Plant">
                 </div>
                 <ul>
                     <li><a href="chi-siamo.php">Chi siamo</a></li>
@@ -287,7 +287,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
                 </div>
             </div>
             <hr>
-            <p class="copyright">Copyright Lucky Plants</p>
+            <p class="copyright">Copyright Lucky Plant</p>
         </footer>
 
     </div>

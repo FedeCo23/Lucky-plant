@@ -16,7 +16,7 @@
         <!-- HEADER-->
         <header>
             <div class="logo-wrapper">
-                <img src="../img/Asset 1@3x.png" alt="Logo Lucky Plant" class="logo">
+                <img src="../img/Logo1.png" alt="Logo Lucky Plant" class="logo">
                 <h1>Lucky Plant</h1>
             </div>
         </header>
@@ -43,7 +43,7 @@
                 <h3>Chi siamo</h3>
                 <hr>
                 <div class="layout">
-                    <div><img src="../img/Asset 2@3x.png" alt="Logo"></div>
+                    <div><img src="../img/Logo2.png" alt="Logo"></div>
                     <div class="text">
                         <h2>Ciao, noi siamo Silvia e Maria ❤️🌿</h2>
                         <p> Siamo una realtà nata dalla nostra passione per il mondo delle piante e per tutto ciò che permette di rendere gli spazi più verdi e accoglienti. <br>
@@ -61,7 +61,7 @@
         <footer>
             <div class="footer-top">
                 <div class="footer-logo">
-                    <img src="../img/Asset 2@3x.png" alt="Logo Lucky Plant">
+                    <img src="../img/Logo2.png" alt="Logo Lucky Plant">
                 </div>
                 <ul>
                     <li><a href="chi-siamo.php">Chi siamo</a></li>
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <hr>
-            <p class="copyright">Copyright Lucky Plants</p>
+            <p class="copyright">Copyright Lucky Plant</p>
         </footer>
 
     </div>
