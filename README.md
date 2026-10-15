@@ -115,10 +115,4 @@ Questo progetto mi ha permesso di esercitarmi con:
 - Validazione degli input e sicurezza di base.
 - Organizzazione di un progetto web.
 
-## 👩‍💻 Autrice
-
-Progetto personale realizzato da FedeCo23 nell'ambito del mio percorso di apprendimento dello sviluppo web.
-
-- GitHub: https://github.com/FedeCo23
-
 *Lucky Plant — Un progetto per mettere in pratica le competenze di sviluppo web.*
