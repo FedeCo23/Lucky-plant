@@ -22,10 +22,4 @@ try {
     die("Servizio temporaneamente non disponibile."); // messaggio generico per l'utente
 }
 
-
-// impostazione del charset UTF-8
-mysqli_set_charset($conn, "utf8mb4");
-
-
-
 ?>

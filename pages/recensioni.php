@@ -7,6 +7,14 @@ $errori = []; //se la validazione non da esito positivo viene restituito un erro
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //se si utilizza il metodo post (e quindi i dati non si vedono nella barra) allora si fa quanto segue 
 
 
+    //HONEYPOT: il campo "sito_web" è nascosto agli umani, quindi se è compilato a scrivere è stato un bot
+    //al bot facciamo credere che sia andato tutto bene, ma non salviamo niente
+    if (trim($_POST['sito_web'] ?? '') !== '') {
+        header("Location: recensioni.php?ok=1");
+        exit;
+    }
+
+
     //trasforma i dati ricevuti in variabili (meglio non usare sanitize spechial chars all'ingresso ma solo quando vengono restituiti)
     $nome      = trim($_POST['nome'] ?? '');
     $email     = trim($_POST['email'] ?? '');
@@ -16,20 +24,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //se si utilizza il metodo post (e 
 
 
     //validazione dei valori dei campi
+    //si usa === '' invece di empty() perché empty() considera vuoto anche "0"
 
-    if (empty($nome)) { //se è vuoto errore
+    if ($nome === '') { //se è vuoto errore
         $errori[] = "Il campo NOME è obbligatorio";
     }
 
 
-    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) { //se la mail è piena E ANCHE non valida allota fa quanto segue
+    if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) { //se la mail è piena E ANCHE non valida allota fa quanto segue
         $errori[] = "Il campo EMAIL non è valido";
     }
 
-    if (empty($titolo)) { //se è vuoto errore
+    if ($titolo === '') { //se è vuoto errore
         $errori[] = "Il campo TITOLO è obbligatorio";
     }
-    if (empty($contenuto)) { //se è vuoto errore
+    if ($contenuto === '') { //se è vuoto errore
         $errori[] = "Il campo CONTENUTO è obbligatorio";
     }
 
@@ -55,21 +64,41 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //se si utilizza il metodo post (e 
             $email = null;
         }
 
-        $stmt = mysqli_prepare($conn, "INSERT INTO recensioni (nome, email, titolo, contenuto) VALUES (?,?,?,?)"); //query SQL e definiamo in quale tabella vogliamo inserire i dati (recensioni) e quali colonne compilare
-        //definiamo quali valori vogliamo inserire ma lasciando dei segnaposto (?)
+        //IP dell'utente: REMOTE_ADDR è l'unico valore affidabile (X-Forwarded-For lo può falsificare chiunque)
+        //non salviamo l'IP in chiaro ma solo il suo hash
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        $ip_hash = hash('sha256', $ip);
+
+        try { //con mysqli moderno gli errori sono eccezioni, quindi vanno gestiti con try/catch
+
+            //LIMITE DI INVII: contiamo le recensioni inviate da questo IP negli ultimi 10 minuti
+            $stmt = mysqli_prepare($conn, "SELECT COUNT(*) FROM recensioni WHERE ip_hash = ? AND created_at > (NOW() - INTERVAL 10 MINUTE)");
+            mysqli_stmt_bind_param($stmt, "s", $ip_hash);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $conteggio);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+
+            if ($conteggio >= 3) { //massimo 3 recensioni ogni 10 minuti
+                $errori[] = "Troppi invii ravvicinati, riprova tra qualche minuto.";
+            } else {
+
+                $stmt = mysqli_prepare($conn, "INSERT INTO recensioni (nome, email, titolo, contenuto, ip_hash) VALUES (?,?,?,?,?)"); //query SQL e definiamo in quale tabella vogliamo inserire i dati (recensioni) e quali colonne compilare
+                //definiamo quali valori vogliamo inserire ma lasciando dei segnaposto (?)
+                //"approvata" non serve: di default vale 0, quindi la recensione resta nascosta finché non viene approvata
 
 
-        mysqli_stmt_bind_param($stmt, "ssss", $nome, $email, $titolo, $contenuto); //diamo i valori effetti nei segnaposto
+                mysqli_stmt_bind_param($stmt, "sssss", $nome, $email, $titolo, $contenuto, $ip_hash); //diamo i valori effetti nei segnaposto
 
 
-        if (mysqli_stmt_execute($stmt)) { // controlliamo se l'inserimento è andato a buon fine
-            mysqli_stmt_close($stmt);  //chiude la query SQL
-            header("Location: recensioni.php?ok=1"); //da capire bene
-            exit;
-        } else {
+                mysqli_stmt_execute($stmt); // se c'è un errore viene lanciata un'eccezione e si passa al catch
+                mysqli_stmt_close($stmt);  //chiude la query SQL
+                header("Location: recensioni.php?ok=1"); //Post/Redirect/Get: evita che ricaricando la pagina la recensione venga reinviata
+                exit;
+            }
+        } catch (mysqli_sql_exception $e) {
+            error_log($e->getMessage()); //l'errore vero va nei log, all'utente un messaggio generico
             $errori[] = "Errore durante l'inserimento della recensione. Riprova più tardi.";
-            error_log(mysqli_stmt_error($stmt));
-            mysqli_stmt_close($stmt);  //chiude la query SQL
         }
     }
 
@@ -104,15 +133,37 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //se si utilizza il metodo post (e 
      * Nome, email, titolo vuoto -> "Il campo NOME è obbligatorio" e "Il campo TITOLO è obbligatorio" (tolto il required da nome e titolo ma era obbligatorio nella VALIDAZIONE)
      * 
      */
+
+
+    /**
+     * 
+     * ---------------------------DA TESTARE DOPO LE ULTIME MODIFICHE (moderazione, honeypot, limite IP)
+     * 
+     * Invio normale -> messaggio "sarà visibile dopo l'approvazione", la recensione è nel DB con approvata = 0 e NON compare nella lista
+     * 
+     * UPDATE recensioni SET approvata = 1 WHERE id = ...  -> la recensione compare nella lista
+     * 
+     * Honeypot: da DevTools togliere la classe "hp" e scrivere nel campo nascosto -> messaggio di successo ma nessuna riga nel DB
+     * 
+     * Limite IP: inviare 4 recensioni di fila -> la quarta mostra "Troppi invii ravvicinati"
+     * 
+     * DB spento / password sbagliata -> pagina con messaggio generico e nessun dettaglio (host, utente) visibile
+     */
 }
 
 //----------------------------------PRENDIAMO LE RECENSIONI DAL DB E LE INSERIAMO NELLA PAGINA
 
-$sql = "SELECT id, nome, email, titolo, contenuto, DATE_FORMAT(created_at, '%d/%m/%Y') AS data_corretta FROM recensioni ORDER BY created_at DESC"; //prende le colonne dalla tabella recensione usando la data di creazione, dalla più recente alla più vecchia
+$sql = "SELECT id, nome, email, titolo, contenuto, DATE_FORMAT(created_at, '%d/%m/%Y') AS data_corretta FROM recensioni WHERE approvata = 1 ORDER BY created_at DESC"; //prende le colonne dalla tabella recensione usando la data di creazione, dalla più recente alla più vecchia
+//WHERE approvata = 1 -> vengono mostrate solo le recensioni approvate
 //il formato della data corretto viene salvato in data_corretta
 
 
-$result = mysqli_query($conn, $sql); //result contiene il risultato della query SELECT
+try {
+    $result = mysqli_query($conn, $sql); //result contiene il risultato della query SELECT
+} catch (mysqli_sql_exception $e) {
+    error_log($e->getMessage());
+    $result = false; //se la query fallisce la pagina si vede comunque, senza recensioni
+}
 
 $recensioni = []; // array di recensioni inizialmente vuoto a cui poi verrà aggiunto una recsnione (che sarà un'array di dati (le row))
 
@@ -145,7 +196,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
  * 
  * SE ELIIMINO DAL DB SI ELIMINA DALLA PAGINA
  * 
- * SE INSERISCO I DATI NEL FORM STAMPA IMMEDIATAMENTE LA NUOVA RECENSIONE IN ORDINE DI DATA
+ * SE INSERISCO I DATI NEL FORM STAMPA IMMEDIATAMENTE LA NUOVA RECENSIONE IN ORDINE DI DATA (prima della moderazione: ora serve l'approvazione)
  * 
  * 
  * 
@@ -167,7 +218,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Plant</title>
-    <link rel="stylesheet" href="../css/style.css?v=4">
+    <link rel="stylesheet" href="../css/style.css?v=3">
 
 </head>
 
@@ -177,7 +228,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <!-- HEADER-->
         <header>
             <div class="logo-wrapper">
-                <img src="../img/Logo1.png" alt="Logo Lucky Plant" class="logo">
+                <img src="../img/Asset 1@3x.png" alt="Logo Lucky Plant" class="logo">
                 <h1>Lucky Plant</h1>
             </div>
         </header>
@@ -208,14 +259,17 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
                 </div>
             <?php endif; ?>
 
-            <?php if (isset($_GET['ok'])): ?> <!--da capire-->
-                <p class="successo">Recensione inserita correttamente!</p>
+            <?php if (isset($_GET['ok'])): ?> <!--compare dopo il redirect (?ok=1) fatto dopo l'inserimento-->
+                <p class="successo">Grazie! La tua recensione sarà visibile dopo l'approvazione.</p>
             <?php endif; ?>
 
 
             <form action="" method="post">
                 <fieldset>
                     <legend>Lascia una recensione</legend>
+
+                    <!--Avviso: progetto didattico-->
+                    <p>Progetto didattico: non inserire dati personali reali.</p>
 
                     <label for="nome">Nome: *</label>
                     <input type="text" name="nome" id="nome" required maxlength="150" placeholder="Inserisci il tuo nome">
@@ -229,6 +283,11 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
                     <label for="contenuto">Contenuto: *</label>
                     <textarea name="contenuto" id="contenuto" required placeholder="Lascia una recensione" maxlength="5000"></textarea>
 
+                    <!--HONEYPOT: campo nascosto con CSS (classe hp), gli umani non lo vedono ma i bot lo compilano-->
+                    <div class="hp" aria-hidden="true">
+                        <label for="sito_web">Non compilare questo campo</label>
+                        <input type="text" name="sito_web" id="sito_web" tabindex="-1" autocomplete="off">
+                    </div>
 
                     <button type="submit">Invia</button>
                 </fieldset>
@@ -273,7 +332,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
         <footer>
             <div class="footer-top">
                 <div class="footer-logo">
-                    <img src="../img/Logo2.png" alt="Logo Lucky Plant">
+                    <img src="../img/Asset 2@3x.png" alt="Logo Lucky Plant">
                 </div>
                 <ul>
                     <li><a href="chi-siamo.php">Chi siamo</a></li>
@@ -287,7 +346,7 @@ if ($result) { //se la query è stata eseguita correttamente allora fai quanto s
                 </div>
             </div>
             <hr>
-            <p class="copyright">Copyright Lucky Plant</p>
+            <p class="copyright">Copyright Lucky Plants</p>
         </footer>
 
     </div>
