@@ -1,0 +1,319 @@
+/*TROVA LA TUA PIANTA (aside nella home + pagina pianta.php)*/
+
+/* testo nascosto  */
+.solo-lettori {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* HOME: colonna laterale a sinistra + blog a destra */
+.home-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.home-layout main {
+    min-width: 0;
+}
+
+.home-layout #blog article {
+    column-count: 2;
+}
+
+.trova-pianta {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: var(--colore-card);
+    border-radius: 10px;
+    position: sticky;
+    top: 20px;
+}
+
+.trova-pianta h3 {
+    margin-top: 0;
+}
+
+/* MODULO DI RICERCA (campo + lente) */
+.ricerca-pianta {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.ricerca-pianta input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--colore-principale-scuro);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--colore-testo);
+    background-color: var(--colore-sfondo-pagina);
+}
+
+.ricerca-pianta input:focus {
+    outline: 2px solid var(--colore-decorazioni);
+    border-color: var(--colore-decorazioni);
+}
+
+.ricerca-pianta button {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--colore-principale-scuro);
+    color: var(--colore-testo-chiaro);
+    cursor: pointer;
+}
+
+.ricerca-pianta button:hover {
+    background-color: var(--colore-decorazioni);
+}
+
+.ricerca-pianta button:focus-visible {
+    outline: 2px solid var(--colore-decorazioni);
+    outline-offset: 2px;
+}
+
+.nota-ricerca {
+    margin: 8px 0 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+
+/* PAGINA PIANTA */
+.pagina-pianta {
+    padding: 30px 20px;
+}
+
+.pagina-pianta a {
+    color: var(--colore-principale-scuro);
+    font-weight: bold;
+}
+
+.ricerca-pagina .ricerca-pianta {
+    max-width: 600px;
+}
+
+.risultati h2,
+.scheda-pianta h2 {
+    color: var(--colore-testo);
+}
+
+/* elenco dei risultati */
+.griglia-piante {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.risultato-pianta {
+    display: block;
+    padding: 15px;
+    background-color: var(--colore-card);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
+    font-weight: normal;
+    color: var(--colore-testo);
+    transition: transform 0.2s;
+}
+
+.pagina-pianta a.risultato-pianta {
+    color: var(--colore-testo);
+    font-weight: normal;
+}
+
+a.risultato-pianta:hover {
+    transform: translateY(-3px);
+}
+
+.risultato-pianta.non-disponibile {
+    opacity: 0.75;
+}
+
+.risultato-pianta img,
+.senza-immagine {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.senza-immagine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    background-color: var(--colore-sfondo-pagina);
+}
+
+.risultato-pianta h3 {
+    margin: 12px 0 4px;
+    font-size: 18px;
+    color: var(--colore-testo);
+}
+
+.nome-scientifico {
+    margin: 0;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.paginazione {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    background: none;
+}
+
+/* scheda della pianta */
+.scheda-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    margin-top: 20px;
+    align-items: start;
+}
+
+.scheda-immagine img {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.scheda-immagine .senza-immagine {
+    height: 260px;
+}
+
+.credito-immagine {
+    margin: 6px 0 0;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.scheda-dati {
+    padding: 20px;
+    background-color: var(--colore-card);
+    border-radius: 10px;
+}
+
+.etichette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 15px;
+    padding: 0;
+    list-style: none;
+}
+
+.etichette li {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: var(--colore-principale-scuro);
+    color: var(--colore-testo-chiaro);
+    font-size: 14px;
+}
+
+.sicurezza {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: var(--colore-sfondo-pagina);
+}
+
+.sicurezza-avviso {
+    border-left: 5px solid var(--colore-errore);
+}
+
+.sicurezza-ok {
+    border-left: 5px solid var(--colore-decorazioni);
+}
+
+.dati-pianta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 20px;
+    margin: 0;
+}
+
+.dati-pianta dt {
+    font-weight: bold;
+}
+
+.dati-pianta dd {
+    margin: 0;
+}
+
+.fonte-dati {
+    margin-top: 40px;
+    text-align: center;
+}
+
+
+/* ---------- MOBILE E TABLET ---------- */
+
+@media (max-width: 900px) {
+    .home-layout #blog article {
+        column-count: 1;
+    }
+}
+
+@media (max-width: 700px) {
+
+    /* HOME: la ricerca passa in cima, sopra il blog */
+    .home-layout {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .trova-pianta {
+        order: -1;
+        position: static;
+        margin-top: 25px;
+    }
+
+    /* PAGINA PIANTA */
+    .pagina-pianta {
+        padding: 25px 0;
+    }
+
+    .griglia-piante {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .scheda-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dati-pianta {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+
+    .dati-pianta dd {
+        margin-bottom: 10px;
+    }
+}

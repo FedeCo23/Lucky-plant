@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Plant</title>
     <link rel="stylesheet" href="../css/style.css?v=3">
+    <link rel="stylesheet" href="../css/style-trova-pianta">
 </head>
 
 <body>
@@ -64,33 +65,58 @@
             </div>
         </section>
 
-        <main>
-            <!--BLOG-->
-            <section id="blog">
-                <h3>Blog</h3>
+        <!--CONTENUTO PRINCIPALE + COLONNA LATERALE-->
+        <div class="home-layout">
+             <!--TROVA LA TUA PIANTA: il modulo invia il nome cercato (metodo GET) alla pagina dei risultati-->
+            <aside class="trova-pianta" aria-labelledby="titolo-trova-pianta">
+                <h3 id="titolo-trova-pianta">Trova la tua pianta</h3>
                 <hr>
-                <h4>Il valore delle piante</h4>
-                <article>
-                    <p>Le piante arricchiscono gli spazi, migliorano la qualità dell'ambiente e contribuiscono al
-                        nostro
-                        benessere quotidiano. Dai giardini ai balconi, ogni specie dona colore, equilibrio e
-                        armonia,
-                        trasformando qualsiasi luogo in uno spazio più accogliente. Prendersene cura significa
-                        riscoprire il contatto con la natura e valorizzare gli ambienti in cui viviamo, creando
-                        un'atmosfera piacevole e rilassante <span class="fake_link">Leggi l'articolo →</span></p>
-                </article>
-                <h4>Le piante della salute</h4>
-                <article>
-                    <p>Molte piante sono apprezzate da secoli per le loro proprietà benefiche e per il loro utilizzo
-                        nella tradizione erboristica. Aromatiche, officinali e medicinali rappresentano un prezioso
-                        alleato per il benessere, grazie alle loro caratteristiche naturali. Inserirle nella vita di
-                        tutti i giorni significa riscoprire il valore della natura e il piacere di uno stile di vita
-                        più
-                        equilibrato e consapevole...<span class="fake_link">Leggi l'articolo →</span>
-                    </p>
-                </article>
-            </section>
-        </main>
+                <p>Cerca una pianta per nome e scopri come prendertene cura.</p>
+
+                <form action="pianta.php" method="get" role="search" class="ricerca-pianta">
+                    <label for="q" class="solo-lettori">Nome della pianta</label>
+                    <input type="search" name="q" id="q" required minlength="2" maxlength="60"
+                        placeholder="Es. monstera, basilico, rosa...">
+                    <button type="submit" aria-label="Cerca">
+                        <!--lente d'ingrandimento (SVG, prende il colore del tema)-->
+                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+                        </svg>
+                    </button>
+                </form>
+                <p class="nota-ricerca">Puoi scrivere il nome italiano, inglese o scientifico.</p>
+
+                <!--FOTO: il caricamento di una fotografia per riconoscere la pianta si aggiunge al punto 4 (Pl@ntNet)-->
+            </aside>
+            <main>
+                <!--BLOG-->
+                <section id="blog">
+                    <h3>Blog</h3>
+                    <hr>
+                    <h4>Il valore delle piante</h4>
+                    <article>
+                        <p>Le piante arricchiscono gli spazi, migliorano la qualità dell'ambiente e contribuiscono al
+                            nostro
+                            benessere quotidiano. Dai giardini ai balconi, ogni specie dona colore, equilibrio e
+                            armonia,
+                            trasformando qualsiasi luogo in uno spazio più accogliente. Prendersene cura significa
+                            riscoprire il contatto con la natura e valorizzare gli ambienti in cui viviamo, creando
+                            un'atmosfera piacevole e rilassante <span class="fake_link">Leggi l'articolo →</span></p>
+                    </article>
+                    <h4>Le piante della salute</h4>
+                    <article>
+                        <p>Molte piante sono apprezzate da secoli per le loro proprietà benefiche e per il loro utilizzo
+                            nella tradizione erboristica. Aromatiche, officinali e medicinali rappresentano un prezioso
+                            alleato per il benessere, grazie alle loro caratteristiche naturali. Inserirle nella vita di
+                            tutti i giorni significa riscoprire il valore della natura e il piacere di uno stile di vita
+                            più
+                            equilibrato e consapevole...<span class="fake_link">Leggi l'articolo →</span>
+                        </p>
+                    </article>
+                </section>
+            </main>
+        </div>
         <a href="#home" id="home_icon"><img src="../img/uparrow_120588.webp"
                 alt="icona freccia cliccabile che riporta alla sezione principale della pagina"></a>
 
@@ -113,7 +139,7 @@
                 </div>
             </div>
             <hr>
-            <p class="copyright">Copyright Lucky Plant</p>
+            <p class="copyright">Copyright Lucky Plants</p>
         </footer>
 
     </div>
@@ -137,7 +163,7 @@
         if (tema === "dark") {
             body.classList.add("tema-dark");
         }
-          localStorage.setItem("tema", tema);
+        localStorage.setItem("tema", tema);
     }
 
 
@@ -155,9 +181,9 @@
 
     const temaSalvato = localStorage.getItem("tema");
 
-if (temaSalvato) {
-    cambiaTema(temaSalvato);
-}
+    if (temaSalvato) {
+        cambiaTema(temaSalvato);
+    }
 </script>
 
 </html>
